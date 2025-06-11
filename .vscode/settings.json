@@ -1,5 +1,5 @@
 {
-	"editor.formatOnSave": false,
+	"editor.formatOnSave": true,
 	"[typescript]": {
 		"editor.defaultFormatter": "biomejs.biome",
 	},
@@ -7,4 +7,7 @@
 		"source.fixAll": "explicit",
 		"source.organizeImports.biome": "explicit"
 	},
+	"biome.lsp.bin": "./node_modules/.bin/biome",
+	"biome.configurationPath": "./server/biome.json",
+	"biome.requireConfiguration": true
 }
