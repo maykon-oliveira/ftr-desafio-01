@@ -3,7 +3,7 @@ import { fastifyCors } from "@fastify/cors";
 import { fastifySwagger } from "@fastify/swagger";
 import { env } from "./config/env.ts";
 
-const server = fastify({ logger: true });
+const server = fastify({ logger: env.NODE_ENV !== "production" });
 
 server.register(fastifyCors, {
 	origin: "*",
