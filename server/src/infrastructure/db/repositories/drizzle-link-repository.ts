@@ -5,6 +5,13 @@ import { db } from "@/infrastructure/db";
 import { schemas } from "@/infrastructure/db/schemas/index";
 
 export class DrizzleLinkRepository implements LinkRepository {
+	deleteByShortCode(shortCode: string): Promise<void> {
+		return db
+			.delete(schemas.links)
+			.where(eq(schemas.links.shortCode, shortCode))
+			.then(() => undefined);
+	}
+
 	findByShortCode(shortCode: string): Promise<boolean> {
 		return db
 			.select({ count: count() })

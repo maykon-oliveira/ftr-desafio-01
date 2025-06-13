@@ -22,6 +22,7 @@ describe("CreateLinkUseCase", () => {
 		mockLinkRepository = {
 			findByShortCode: vi.fn(),
 			save: vi.fn(),
+			deleteByShortCode: vi.fn(),
 		};
 
 		// Create the use case instance

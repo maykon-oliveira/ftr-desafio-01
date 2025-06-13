@@ -38,9 +38,10 @@ describe("linkRoute e2e", () => {
 		expect(body).toHaveProperty("message", "Link created successfully");
 		expect(body).toHaveProperty("data");
 		const { data } = body;
-		expect(data).toHaveProperty("originalUrl", payload.originalUrl);
-		expect(data).toHaveProperty("shortCode", payload.shortCode);
-		expect(data).toHaveProperty("id");
+		expect(data).toMatchObject({ 
+			originalUrl: payload.originalUrl,
+			shortCode: payload.shortCode
+		 });
 	});
 
 	it("should return 400 for invalid body", async () => {
@@ -82,5 +83,25 @@ describe("linkRoute e2e", () => {
 		const body = second.json();
 		expect(body).toHaveProperty("error", "Conflict");
 		expect(body).toHaveProperty("message", "The short URL already exists.");
+	});
+
+	it("should delete if the shortCode is valid", async () => {
+		const shortCode = "vitest";
+		const response = await app.inject({
+			method: "DELETE",
+			url: `/links/${shortCode}`,
+		});
+		expect(response.statusCode).toBe(204);
+	});
+
+	it("should return 400 if the shortCode is unformatted", async () => {
+		const shortCode = "*unformatted*";
+		const response = await app.inject({
+			method: "DELETE",
+			url: `/links/${shortCode}`,
+		});
+		expect(response.statusCode).toBe(400);
+		const body = response.json();
+		expect(body).toHaveProperty("error", "Bad Request");
 	});
 });

@@ -1,6 +1,12 @@
 import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
-import { CreateLinkInput } from "@/application/validators/link.validator";
+import {
+	CreateLinkInput,
+	CreateLinkOutput,
+	DeleteLinkInput,
+	DeleteLinkOutput,
+} from "@/application/validators/link.validator";
 import { CreateLinkUseCase } from "@/application/use-cases/create-link.use-case";
+import { DeleteLinkUseCase } from "@/application/use-cases/delete-link.use-case";
 
 export const linkRoute: FastifyPluginAsyncZod = async (server) => {
 	server.post(
@@ -10,17 +16,42 @@ export const linkRoute: FastifyPluginAsyncZod = async (server) => {
 				summary: "Create a new link",
 				description: "Create a new shortened link with a custom short code.",
 				body: CreateLinkInput,
+				response: {
+					201: CreateLinkOutput,
+				},
 			},
 		},
 		async (request, reply) => {
 			const useCase = new CreateLinkUseCase();
 
-			const result = await useCase.execute(request.body as CreateLinkInput);
+			const result = await useCase.execute(request.body);
 
 			return reply.status(201).send({
 				message: "Link created successfully",
 				data: result,
 			});
+		},
+	);
+
+	server.delete(
+		"/links/:shortCode",
+		{
+			schema: {
+				summary: "Delete a link",
+				description: "Delete a shortened link by its short code.",
+				params: DeleteLinkInput,
+				response: {
+					204: DeleteLinkOutput,
+				},
+			},
+		},
+		async (request, reply) => {
+			const { shortCode } = request.params;
+			const useCase = new DeleteLinkUseCase();
+
+			await useCase.execute({ shortCode });
+
+			return reply.status(204).send();
 		},
 	);
 };
