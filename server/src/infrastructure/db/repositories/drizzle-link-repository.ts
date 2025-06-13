@@ -1,10 +1,14 @@
-import { count, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { LinkRepository } from "@/application/ports/link.repository";
 import { Link } from "@/domain/entities/link";
 import { db } from "@/infrastructure/db";
 import { schemas } from "@/infrastructure/db/schemas/index";
 
 export class DrizzleLinkRepository implements LinkRepository {
+	findAll(): Promise<Link[]> {
+		return db.select().from(schemas.links);
+	}
+
 	deleteByShortCode(shortCode: string): Promise<void> {
 		return db
 			.delete(schemas.links)

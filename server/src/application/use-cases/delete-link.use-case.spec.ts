@@ -21,6 +21,7 @@ describe("DeleteLinkUseCase", () => {
 			findByShortCode: vi.fn(),
 			save: vi.fn(),
 			deleteByShortCode: vi.fn(),
+			findAll: vi.fn(),
 		};
 
 		useCase = new DeleteLinkUseCase();

@@ -4,6 +4,7 @@ import {
 	CreateLinkOutput,
 	DeleteLinkInput,
 	DeleteLinkOutput,
+	FindAllLinkOutput,
 	ResolveLinkInput,
 	ResolveLinkOutput,
 } from "@/application/validators/link.validator";
@@ -11,6 +12,7 @@ import { CreateLinkUseCase } from "@/application/use-cases/create-link.use-case"
 import { DeleteLinkUseCase } from "@/application/use-cases/delete-link.use-case";
 import { ResolveLinkUseCase } from "@/application/use-cases/resolve-link.use-case";
 import { z } from "zod";
+import { FindAllLinkUseCase } from "@/application/use-cases/find-all-link.use-case";
 
 export const linkRoute: FastifyPluginAsyncZod = async (server) => {
 	server.post(
@@ -85,6 +87,24 @@ export const linkRoute: FastifyPluginAsyncZod = async (server) => {
 				message: "Link resolved successfully",
 				data: { originalUrl },
 			});
+		},
+	);
+
+	server.get(
+		"/links",
+		{
+			schema: {
+				summary: "List all links",
+				description: "Retrieve a list of all shortened links.",
+				response: {
+					200: FindAllLinkOutput,
+				},
+			},
+		},
+		async (request, reply) => {
+			const useCase = new FindAllLinkUseCase();
+			const links = await useCase.execute();
+			return reply.status(200).send(links);
 		},
 	);
 };

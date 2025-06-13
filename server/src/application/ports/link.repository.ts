@@ -6,4 +6,6 @@ export interface LinkRepository {
 	save(link: Link): Promise<Link>;
 
 	deleteByShortCode(shortCode: string): Promise<void>;
+
+	findAll(): Promise<Link[]>;
 }

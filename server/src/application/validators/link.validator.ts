@@ -51,3 +51,12 @@ export const ResolveLinkOutput = z.object({
 });
 
 export type ResolveLinkOutput = z.infer<typeof ResolveLinkOutput>;
+
+export const FindAllLinkOutput = z.array(
+	z.object({
+		originalUrl,
+		shortCode,
+	}),
+);
+
+export type FindAllLinkOutput = z.infer<typeof FindAllLinkOutput>;

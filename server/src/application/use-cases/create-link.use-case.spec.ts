@@ -23,6 +23,7 @@ describe("CreateLinkUseCase", () => {
 			findByShortCode: vi.fn(),
 			save: vi.fn(),
 			deleteByShortCode: vi.fn(),
+			findAll: vi.fn(),
 		};
 
 		// Create the use case instance
