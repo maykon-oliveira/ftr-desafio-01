@@ -4,9 +4,13 @@ import {
 	CreateLinkOutput,
 	DeleteLinkInput,
 	DeleteLinkOutput,
+	ResolveLinkInput,
+	ResolveLinkOutput,
 } from "@/application/validators/link.validator";
 import { CreateLinkUseCase } from "@/application/use-cases/create-link.use-case";
 import { DeleteLinkUseCase } from "@/application/use-cases/delete-link.use-case";
+import { ResolveLinkUseCase } from "@/application/use-cases/resolve-link.use-case";
+import { z } from "zod";
 
 export const linkRoute: FastifyPluginAsyncZod = async (server) => {
 	server.post(
@@ -18,6 +22,10 @@ export const linkRoute: FastifyPluginAsyncZod = async (server) => {
 				body: CreateLinkInput,
 				response: {
 					201: CreateLinkOutput,
+					404: z.object({
+						error: z.string(),
+						message: z.string(),
+					}),
 				},
 			},
 		},
@@ -52,6 +60,31 @@ export const linkRoute: FastifyPluginAsyncZod = async (server) => {
 			await useCase.execute({ shortCode });
 
 			return reply.status(204).send();
+		},
+	);
+
+	server.get(
+		"/links/:shortCode",
+		{
+			schema: {
+				summary: "Resolve a link",
+				description: "Resolve a shortened link to its original URL.",
+				params: ResolveLinkInput,
+				response: {
+					200: ResolveLinkOutput,
+				},
+			},
+		},
+		async (request, reply) => {
+			const { shortCode } = request.params;
+			const useCase = new ResolveLinkUseCase();
+
+			const originalUrl = await useCase.execute({ shortCode });
+
+			return reply.status(200).send({
+				message: "Link resolved successfully",
+				data: { originalUrl },
+			});
 		},
 	);
 };

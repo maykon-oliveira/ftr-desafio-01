@@ -12,12 +12,12 @@ export class DrizzleLinkRepository implements LinkRepository {
 			.then(() => undefined);
 	}
 
-	findByShortCode(shortCode: string): Promise<boolean> {
+	findByShortCode(shortCode: string): Promise<Link | null> {
 		return db
-			.select({ count: count() })
+			.select()
 			.from(schemas.links)
 			.where(eq(schemas.links.shortCode, shortCode))
-			.then(([row]) => row.count > 0);
+			.then(([row]) => row);
 	}
 
 	save(link: Link): Promise<Link> {

@@ -1,4 +1,5 @@
 import { DuplicateShortUrlError } from "@/domain/errors/duplicate-short-url-error";
+import { LinkNotFoundError } from "@/domain/errors/link-not-found";
 import { FastifyError, FastifyReply, FastifyRequest } from "fastify";
 
 export function errorHandler(error: FastifyError, request: FastifyRequest, reply: FastifyReply) {
@@ -13,6 +14,13 @@ export function errorHandler(error: FastifyError, request: FastifyRequest, reply
 	if (error instanceof DuplicateShortUrlError) {
 		return reply.status(409).send({
 			error: "Conflict",
+			message: error.message,
+		});
+	}
+
+	if (error instanceof LinkNotFoundError) {
+		return reply.status(404).send({
+			error: "Not Found",
 			message: error.message,
 		});
 	}

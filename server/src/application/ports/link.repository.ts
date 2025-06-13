@@ -1,7 +1,7 @@
 import { Link } from "@/domain/entities/link";
 
 export interface LinkRepository {
-	findByShortCode(shortCode: string): Promise<boolean>;
+	findByShortCode(shortCode: string): Promise<Link | null>;
 
 	save(link: Link): Promise<Link>;
 

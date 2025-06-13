@@ -44,7 +44,7 @@ describe("CreateLinkUseCase", () => {
 			// Simulate that the saved link has an ID assigned by the database
 			(savedLink as any).id = "generated-id";
 
-			vi.mocked(mockLinkRepository.findByShortCode).mockResolvedValue(false);
+			vi.mocked(mockLinkRepository.findByShortCode).mockResolvedValue(null);
 			vi.mocked(mockLinkRepository.save).mockResolvedValue(savedLink);
 
 			// Act
@@ -64,7 +64,8 @@ describe("CreateLinkUseCase", () => {
 
 		it("should throw DuplicateShortUrlError when short code already exists", async () => {
 			// Arrange
-			vi.mocked(mockLinkRepository.findByShortCode).mockResolvedValue(true);
+			const link: Link = Link.create(validInput.originalUrl, validInput.shortCode);
+			vi.mocked(mockLinkRepository.findByShortCode).mockResolvedValue(link);
 
 			// Act & Assert
 			await expect(createLinkUseCase.execute(validInput)).rejects.toThrow(DuplicateShortUrlError);
@@ -81,7 +82,7 @@ describe("CreateLinkUseCase", () => {
 			const savedLink = Link.create(validInput.originalUrl, validInput.shortCode);
 			(savedLink as any).id = "generated-id";
 
-			vi.mocked(mockLinkRepository.findByShortCode).mockResolvedValue(false);
+			vi.mocked(mockLinkRepository.findByShortCode).mockResolvedValue(null);
 			vi.mocked(mockLinkRepository.save).mockResolvedValue(savedLink);
 
 			// Act
@@ -99,7 +100,7 @@ describe("CreateLinkUseCase", () => {
 			const savedLink = Link.create(validInput.originalUrl, validInput.shortCode);
 			(savedLink as any).id = "generated-id";
 
-			vi.mocked(mockLinkRepository.findByShortCode).mockResolvedValue(false);
+			vi.mocked(mockLinkRepository.findByShortCode).mockResolvedValue(null);
 			vi.mocked(mockLinkRepository.save).mockResolvedValue(savedLink);
 
 			// Act
@@ -123,7 +124,7 @@ describe("CreateLinkUseCase", () => {
 		it("should handle save repository errors gracefully", async () => {
 			// Arrange
 			const saveError = new Error("Failed to save link");
-			vi.mocked(mockLinkRepository.findByShortCode).mockResolvedValue(false);
+			vi.mocked(mockLinkRepository.findByShortCode).mockResolvedValue(null);
 			vi.mocked(mockLinkRepository.save).mockRejectedValue(saveError);
 
 			// Act & Assert
@@ -140,7 +141,7 @@ describe("CreateLinkUseCase", () => {
 			const savedLink = Link.create(differentInput.originalUrl, differentInput.shortCode);
 			(savedLink as any).id = "different-id";
 
-			vi.mocked(mockLinkRepository.findByShortCode).mockResolvedValue(false);
+			vi.mocked(mockLinkRepository.findByShortCode).mockResolvedValue(null);
 			vi.mocked(mockLinkRepository.save).mockResolvedValue(savedLink);
 
 			// Act

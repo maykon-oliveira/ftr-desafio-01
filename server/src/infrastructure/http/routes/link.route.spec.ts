@@ -38,10 +38,10 @@ describe("linkRoute e2e", () => {
 		expect(body).toHaveProperty("message", "Link created successfully");
 		expect(body).toHaveProperty("data");
 		const { data } = body;
-		expect(data).toMatchObject({ 
+		expect(data).toMatchObject({
 			originalUrl: payload.originalUrl,
-			shortCode: payload.shortCode
-		 });
+			shortCode: payload.shortCode,
+		});
 	});
 
 	it("should return 400 for invalid body", async () => {
@@ -103,5 +103,40 @@ describe("linkRoute e2e", () => {
 		expect(response.statusCode).toBe(400);
 		const body = response.json();
 		expect(body).toHaveProperty("error", "Bad Request");
+	});
+
+	it("given a shortCode should returns 200 and the originalURL", async () => {
+		await app.inject({
+			method: "POST",
+			url: "/links",
+			payload,
+		});
+
+		const response = await app.inject({
+			method: "GET",
+			url: `/links/${payload.shortCode}`,
+		});
+
+		expect(response.statusCode).toBe(200);
+		const body = response.json();
+		expect(body).toHaveProperty("message", "Link resolved successfully");
+		expect(body).toHaveProperty("data");
+		const { data } = body;
+		expect(data).toMatchObject({
+			originalUrl: payload.originalUrl,
+		});
+	});
+
+	it("given a shortCode should returns 404 if the doesn't exists", async () => {
+		const shortCode = "unknownShortCode";
+		const response = await app.inject({
+			method: "GET",
+			url: `/links/${shortCode}`,
+		});
+
+		expect(response.statusCode).toBe(404);
+		const body = response.json();
+		expect(body).toHaveProperty("error", "Not Found");
+		expect(body).toHaveProperty("message", `Link with short code "${shortCode}" not found`);
 	});
 });
