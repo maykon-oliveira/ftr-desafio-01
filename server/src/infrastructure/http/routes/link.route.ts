@@ -81,11 +81,11 @@ export const linkRoute: FastifyPluginAsyncZod = async (server) => {
 			const { shortCode } = request.params;
 			const useCase = new ResolveLinkUseCase();
 
-			const originalUrl = await useCase.execute({ shortCode });
+			const result = await useCase.execute({ shortCode });
 
 			return reply.status(200).send({
 				message: "Link resolved successfully",
-				data: { originalUrl },
+				data: result,
 			});
 		},
 	);

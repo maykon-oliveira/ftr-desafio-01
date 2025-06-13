@@ -2,6 +2,7 @@ import { DrizzleLinkRepository } from "@/infrastructure/db/repositories/drizzle-
 import { LinkRepository } from "@/application/ports/link.repository";
 import type { ResolveLinkInput } from "@/application/validators/link.validator";
 import { LinkNotFoundError } from "@/domain/errors/link-not-found";
+import { Link } from "@/domain/entities/link";
 
 export class ResolveLinkUseCase {
 	private readonly linkRepository: LinkRepository;
@@ -10,7 +11,7 @@ export class ResolveLinkUseCase {
 		this.linkRepository = new DrizzleLinkRepository();
 	}
 
-	async execute(input: ResolveLinkInput): Promise<string> {
+	async execute(input: ResolveLinkInput): Promise<Pick<Link, "originalUrl" | "accessCount">> {
 		const { shortCode } = input;
 
 		const link = await this.linkRepository.findByShortCode(shortCode);
@@ -19,6 +20,11 @@ export class ResolveLinkUseCase {
 			throw new LinkNotFoundError(`Link with short code "${shortCode}" not found`);
 		}
 
-		return link.originalUrl;
+		await this.linkRepository.incrementAccessCount(shortCode);
+
+		return {
+			originalUrl: link.originalUrl,
+			accessCount: link.accessCount + 1,
+		};
 	}
 }

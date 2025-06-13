@@ -20,6 +20,7 @@ describe("FindAllLinkUseCase", () => {
 			save: vi.fn(),
 			deleteByShortCode: vi.fn(),
 			findAll: vi.fn(),
+			incrementAccessCount: vi.fn(),
 		};
 		useCase = new FindAllLinkUseCase();
 		(useCase as any).linkRepository = mockLinkRepository;

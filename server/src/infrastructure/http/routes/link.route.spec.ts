@@ -41,6 +41,7 @@ describe("linkRoute e2e", () => {
 		expect(data).toMatchObject({
 			originalUrl: payload.originalUrl,
 			shortCode: payload.shortCode,
+			accessCount: 0,
 		});
 	});
 
@@ -105,7 +106,7 @@ describe("linkRoute e2e", () => {
 		expect(body).toHaveProperty("error", "Bad Request");
 	});
 
-	it("given a shortCode should returns 200 and the originalURL", async () => {
+	it("given a shortCode should returns 200, the originalURL, and the counter incremented", async () => {
 		await app.inject({
 			method: "POST",
 			url: "/links",
@@ -124,6 +125,7 @@ describe("linkRoute e2e", () => {
 		const { data } = body;
 		expect(data).toMatchObject({
 			originalUrl: payload.originalUrl,
+			accessCount: 1,
 		});
 	});
 

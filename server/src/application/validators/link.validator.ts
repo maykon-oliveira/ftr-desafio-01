@@ -9,6 +9,7 @@ const shortCode = z
 		/^[a-zA-Z0-9_-]+$/,
 		"Short code can only contain alphanumeric characters, underscores, and hyphens",
 	);
+const accessCount = z.number().int().nonnegative();
 
 export const CreateLinkInput = z.object({
 	originalUrl,
@@ -22,6 +23,7 @@ export const CreateLinkOutput = z.object({
 	data: z.object({
 		originalUrl,
 		shortCode,
+		accessCount,
 	}),
 });
 
@@ -47,6 +49,7 @@ export const ResolveLinkOutput = z.object({
 	message: z.string().min(1, "Message must not be empty"),
 	data: z.object({
 		originalUrl,
+		accessCount,
 	}),
 });
 
@@ -56,6 +59,7 @@ export const FindAllLinkOutput = z.array(
 	z.object({
 		originalUrl,
 		shortCode,
+		accessCount,
 	}),
 );
 

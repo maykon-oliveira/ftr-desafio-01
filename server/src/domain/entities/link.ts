@@ -4,6 +4,7 @@ export class Link {
 		public originalUrl: string,
 		public shortCode: string,
 		public createdAt: Date,
+		public accessCount: number,
 	) {}
 
 	static create(originalUrl: string, shortCode: string): Link {
@@ -11,6 +12,6 @@ export class Link {
 			throw new Error("Original URL and short code must be provided.");
 		}
 
-		return new Link(null, originalUrl, shortCode, new Date());
+		return new Link(null, originalUrl, shortCode, new Date(), 0);
 	}
 }

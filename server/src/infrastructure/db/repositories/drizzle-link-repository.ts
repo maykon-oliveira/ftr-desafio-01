@@ -1,10 +1,20 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { LinkRepository } from "@/application/ports/link.repository";
 import { Link } from "@/domain/entities/link";
 import { db } from "@/infrastructure/db";
 import { schemas } from "@/infrastructure/db/schemas/index";
 
 export class DrizzleLinkRepository implements LinkRepository {
+	incrementAccessCount(shortCode: string): Promise<void> {
+		return db
+			.update(schemas.links)
+			.set({
+				accessCount: sql`${schemas.links.accessCount} + 1`,
+			})
+			.where(eq(schemas.links.shortCode, shortCode))
+			.then(() => undefined);
+	}
+
 	findAll(): Promise<Link[]> {
 		return db.select().from(schemas.links);
 	}
