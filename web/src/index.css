@@ -1,0 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Open Sans", sans-serif;
+  --font-display: "Open Sans", sans-serif;
+
+  --color-blue-base: #2c46b1;
+  --color-blue-dark: #2c4091;
+  --color-danger: #b12c4d;
+}
