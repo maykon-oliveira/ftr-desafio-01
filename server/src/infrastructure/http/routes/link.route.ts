@@ -4,6 +4,7 @@ import {
 	CreateLinkOutput,
 	DeleteLinkInput,
 	DeleteLinkOutput,
+	ExportCSVLinkOutput,
 	FindAllLinkOutput,
 	ResolveLinkInput,
 	ResolveLinkOutput,
@@ -13,6 +14,7 @@ import { DeleteLinkUseCase } from "@/application/use-cases/delete-link.use-case"
 import { ResolveLinkUseCase } from "@/application/use-cases/resolve-link.use-case";
 import { z } from "zod";
 import { FindAllLinkUseCase } from "@/application/use-cases/find-all-link.use-case";
+import { ExportCSVLinkUseCase } from "@/application/use-cases/export-csv-link.use-case";
 
 export const linkRoute: FastifyPluginAsyncZod = async (server) => {
 	server.post(
@@ -105,6 +107,27 @@ export const linkRoute: FastifyPluginAsyncZod = async (server) => {
 			const useCase = new FindAllLinkUseCase();
 			const links = await useCase.execute();
 			return reply.status(200).send(links);
+		},
+	);
+
+	server.get(
+		"/links/export/csv",
+		{
+			schema: {
+				summary: "Export links to CSV",
+				description: "Export all shortened links to a CSV file.",
+				response: {
+					200: ExportCSVLinkOutput,
+				},
+			},
+		},
+		async (_request, reply) => {
+			const useCase = new ExportCSVLinkUseCase();
+			const downloadUrl = await useCase.execute();
+			return reply.status(200).send({
+				message: "CSV export initiated successfully. Please check your storage for the file.",
+				data: { downloadUrl },
+			});
 		},
 	);
 };

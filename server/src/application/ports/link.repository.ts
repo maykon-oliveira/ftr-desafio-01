@@ -10,4 +10,6 @@ export interface LinkRepository {
 	deleteByShortCode(shortCode: string): Promise<void>;
 
 	findAll(): Promise<Link[]>;
+
+	findAllCursor(): AsyncIterable<any>;
 }

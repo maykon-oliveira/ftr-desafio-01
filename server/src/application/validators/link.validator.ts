@@ -64,3 +64,12 @@ export const FindAllLinkOutput = z.array(
 );
 
 export type FindAllLinkOutput = z.infer<typeof FindAllLinkOutput>;
+
+export const ExportCSVLinkOutput = z.object({
+	message: z.string().min(1, "Message must not be empty"),
+	data: z.object({
+		downloadUrl: z.string().url(),
+	}),
+});
+
+export type ExportCSVLinkOutput = z.infer<typeof ExportCSVLinkOutput>;

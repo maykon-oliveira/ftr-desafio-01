@@ -25,6 +25,7 @@ describe("ResolveLinkUseCase", () => {
 			deleteByShortCode: vi.fn(),
 			findAll: vi.fn(),
 			incrementAccessCount: vi.fn(),
+			findAllCursor: vi.fn(),
 		};
 		useCase = new ResolveLinkUseCase();
 		(useCase as any).linkRepository = mockLinkRepository;

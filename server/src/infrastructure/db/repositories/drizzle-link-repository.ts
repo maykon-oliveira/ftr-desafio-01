@@ -1,8 +1,9 @@
 import { eq, sql } from "drizzle-orm";
 import { LinkRepository } from "@/application/ports/link.repository";
 import { Link } from "@/domain/entities/link";
-import { db } from "@/infrastructure/db";
+import { db, pg } from "@/infrastructure/db";
 import { schemas } from "@/infrastructure/db/schemas/index";
+import { Transform } from "node:stream";
 
 export class DrizzleLinkRepository implements LinkRepository {
 	incrementAccessCount(shortCode: string): Promise<void> {
@@ -17,6 +18,22 @@ export class DrizzleLinkRepository implements LinkRepository {
 
 	findAll(): Promise<Link[]> {
 		return db.select().from(schemas.links);
+	}
+
+	findAllCursor(): AsyncIterable<any> {
+		const { sql, params } = db
+			.select({
+				originalUrl: schemas.links.originalUrl,
+				shortCode: schemas.links.shortCode,
+				accessCount: schemas.links.accessCount,
+				createdAt: schemas.links.createdAt,
+			})
+			.from(schemas.links)
+			.toSQL();
+
+		const cursor = pg.unsafe(sql, params as string[]).cursor(2);
+
+		return cursor;
 	}
 
 	deleteByShortCode(shortCode: string): Promise<void> {
