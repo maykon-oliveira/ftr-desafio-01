@@ -6,7 +6,7 @@ import { CopyIcon, LinkIcon, Trash2Icon } from "lucide-react";
 import { useEffect } from "react";
 
 function LinkList() {
-	const { links, fetching, fetchLinks } = useLinks();
+	const { links, fetchLinks } = useLinks();
 
 	useEffect(() => {
 		fetchLinks();
