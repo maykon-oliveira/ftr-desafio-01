@@ -10,3 +10,13 @@ const api = axios.create({
 export function findAll() {
 	return api.get<Link[]>("/links");
 }
+
+export function findByShortCode(shortCode: string) {
+	return api.get<{
+		message: string;
+		data: {
+			originalUrl: string,
+			accessCount: number,
+		}
+	}>(`/links/${shortCode}`);
+}

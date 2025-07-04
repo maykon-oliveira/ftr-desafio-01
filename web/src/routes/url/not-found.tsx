@@ -15,7 +15,7 @@ function RouteComponent() {
 
           <p className='text-xl'>Link não encontrado</p>
 
-          <p className='text-md text-gray-500'>O link que você está tentando acessar não existe, foi removido ou é uma URL inválida. Saiba mais em <a href="">brev.ly.</a></p>
+          <p className='text-md text-gray-500'>O link que você está tentando acessar não existe, foi removido ou é uma URL inválida. Saiba mais em <a className='text-blue' href="">brev.ly.</a></p>
         </CardContent>
       </Card>
     </div>
