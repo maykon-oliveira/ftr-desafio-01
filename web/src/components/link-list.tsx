@@ -6,7 +6,7 @@ import { CopyIcon, LinkIcon, LoaderCircleIcon, Trash2Icon } from "lucide-react";
 import { useEffect } from "react";
 
 function LinkList() {
-	const { links, fetchLinks, loading } = useLinks();
+	const { links, fetchLinks, loading, copyLinkToClipboard, deleteLink } = useLinks();
 
 	useEffect(() => {
 		fetchLinks();
@@ -53,10 +53,10 @@ function LinkList() {
 							</div>
 							<div className="text-sm text-gray-500">{link.accessCount} acessos</div>
 							<div className="flex gap-1">
-								<Button size="icon" variant="secondary">
+								<Button onClick={() => copyLinkToClipboard(formattedUrl)} size="icon" variant="secondary">
 									<CopyIcon />
 								</Button>
-								<Button size="icon" variant="secondary">
+								<Button onClick={() => deleteLink(link.shortCode)} size="icon" variant="secondary">
 									<Trash2Icon />
 								</Button>
 							</div>

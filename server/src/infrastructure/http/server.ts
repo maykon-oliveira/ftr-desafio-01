@@ -20,6 +20,7 @@ function buildServer() {
 
 	server.register(fastifyCors, {
 		origin: "*",
+		methods: ["GET", "POST", "DELETE", "OPTIONS"],
 	});
 	server.register(fastifySwagger, {
 		openapi: {

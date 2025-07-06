@@ -20,3 +20,7 @@ export function findByShortCode(shortCode: string) {
 		}
 	}>(`/links/${shortCode}`);
 }
+
+export function deleteLink(shortCode: string) {
+	return api.delete(`/links/${shortCode}`);
+}
