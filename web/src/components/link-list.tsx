@@ -2,11 +2,14 @@ import { useLinks } from "@/store/links";
 import { Button } from "./ui/button";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Separator } from "./ui/separator";
-import { CopyIcon, LinkIcon, LoaderCircleIcon, Trash2Icon } from "lucide-react";
+import { LinkIcon, LoaderCircleIcon } from "lucide-react";
 import { useEffect } from "react";
+import { LinkListItem } from "./link-list-item";
 
 function LinkList() {
-	const { links, fetchLinks, loading, copyLinkToClipboard, deleteLink } = useLinks();
+	const links = useLinks(state => state.links);
+	const fetchLinks = useLinks(state => state.fetchLinks);
+	const loading = useLinks(state => state.loading);
 
 	useEffect(() => {
 		fetchLinks();
@@ -40,29 +43,7 @@ function LinkList() {
 					</div>
 				)}
 
-				{links.map((link) => {
-					const formattedUrl = location.origin + "/" + link.shortCode;
-
-					return (
-						<div key={link.shortCode} className="flex items-center py-4 gap-4">
-							<div className="flex flex-col flex-1">
-								<a href={formattedUrl} className="text-md text-blue">
-									{formattedUrl}
-								</a>
-								<span className="text-sm text-gray-500">{link.originalUrl}</span>
-							</div>
-							<div className="text-sm text-gray-500">{link.accessCount} acessos</div>
-							<div className="flex gap-1">
-								<Button onClick={() => copyLinkToClipboard(formattedUrl)} size="icon" variant="secondary">
-									<CopyIcon />
-								</Button>
-								<Button onClick={() => deleteLink(link.shortCode)} size="icon" variant="secondary">
-									<Trash2Icon />
-								</Button>
-							</div>
-						</div>
-					)
-				})}
+				{links.map((link) => <LinkListItem key={link.shortCode} link={link} />)}
 			</CardContent>
 		</Card>
 	)
