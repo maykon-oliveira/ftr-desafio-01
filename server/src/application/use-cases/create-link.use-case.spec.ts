@@ -25,6 +25,7 @@ describe("CreateLinkUseCase", () => {
 			deleteByShortCode: vi.fn(),
 			findAll: vi.fn(),
 			incrementAccessCount: vi.fn(),
+			findAllCursor: vi.fn(),
 		};
 
 		// Create the use case instance

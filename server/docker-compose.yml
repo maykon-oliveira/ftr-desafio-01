@@ -2,14 +2,39 @@ services:
   db:
     image: postgres:16.1
     container_name: brevly_db
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: brevly_db
-    ports:
-      - "5432:5432"
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=brevly_db
     volumes:
       - db_data:/var/lib/postgresql/data
+    networks:
+      - widget
+      - db
+  app:
+    build: .
+    depends_on:
+      - db
+    container_name: brevly_server
+    restart: unless-stopped
+    ports:
+      - 3333:3333
+    environment:
+      - CLOUDFLARE_ACCOUNT_ID=ba0f1ed24f54d80c348e4e89f73c8e55
+      - CLOUDFLARE_ACCESS_KEY_ID=49be6b86a8a6d246b257877e36ec8c5d
+      - CLOUDFLARE_SECRET_ACCESS_KEY=1d9b367ccb612615e0f857eb2a1b09810f2d396d20dde93adb320df98aaa76ea
+      - CLOUDFLARE_BUCKET=brevly
+      - CLOUDFLARE_PUBLIC_URL=https://pub-af0a1873b8654fe496558661987e27a3.r2.dev
+      - DATABASE_URL=postgres://user:password@db/brevly_db
+      - PORT=3333
+    networks:
+      - widget
 
 volumes:
   db_data:
+networks:
+    widget:
+      driver: bridge
+    db:
+      driver: bridge
