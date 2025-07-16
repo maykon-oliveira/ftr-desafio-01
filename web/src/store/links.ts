@@ -13,11 +13,12 @@ type LinkState = {
 	copyLinkToClipboard: (url: string) => void;
 	deleteLink: (shortCode: string) => void;
 	createLink: (link: Omit<Link, "accessCount">) => Promise<void>;
+	downloadCsv: () => Promise<string>;
 }
 
 enableMapSet();
 
-export const useLinks = create<LinkState, [["zustand/immer", never]]>(immer((set, get) => {
+export const useLinks = create<LinkState, [["zustand/immer", never]]>(immer((set, _get) => {
 
 	function copyLinkToClipboard(url: string) {
 		navigator.clipboard.writeText(url);
@@ -44,12 +45,24 @@ export const useLinks = create<LinkState, [["zustand/immer", never]]>(immer((set
 		}
 	}
 
+	async function downloadCsv() {
+		try {
+			const response = await api.exportLinksToCsv();
+			toast.success("CSV baixado com sucesso!");
+			return response.data.data.downloadUrl;
+		} catch (error: AxiosError | any) {
+			toast.error(error.response?.data?.message || "Erro ao baixar CSV");
+			throw error;
+		}
+	}
+
 	return {
 		links: [],
 		loading: true,
 		copyLinkToClipboard,
 		deleteLink,
 		createLink,
+		downloadCsv,
 		fetchLinks: async () => {
 			try {
 				const response = await api.findAll();

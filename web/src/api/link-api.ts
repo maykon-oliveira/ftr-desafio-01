@@ -30,3 +30,7 @@ export function deleteLink(shortCode: string) {
 export function createLink(link: Omit<Link, "accessCount">) {
 	return api.post<ApiResponse<Link>>("/links", link);
 }
+
+export function exportLinksToCsv() {
+	return api.get<ApiResponse<{ downloadUrl: string }>>("/links/export/csv");
+}

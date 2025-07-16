@@ -3,17 +3,29 @@ import { Button } from "./ui/button";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Separator } from "./ui/separator";
 import { LinkIcon, LoaderCircleIcon } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useTransition } from "react";
 import { LinkListItem } from "./link-list-item";
 
 function LinkList() {
 	const links = useLinks(state => state.links);
 	const fetchLinks = useLinks(state => state.fetchLinks);
 	const loading = useLinks(state => state.loading);
+	const downloadCsv = useLinks(state => state.downloadCsv);
+	const [isPending, startTransaction] = useTransition();
 
 	useEffect(() => {
 		fetchLinks();
 	}, [fetchLinks]);
+
+	function handleDownloadCsv() {
+		startTransaction(() => {
+			downloadCsv()
+				.then(url => open(url, "_blank"))
+				.catch(error => {
+					console.error("Erro ao baixar CSV:", error);
+				});
+		});
+	}
 
 	return (
 		<Card className="w-full h-min relative">
@@ -22,7 +34,7 @@ function LinkList() {
 					Meus links
 				</CardTitle>
 				<CardAction>
-					<Button className="hover:cursor-pointer" size="sm" variant="secondary" disabled={!links.length}>Baixar CSV</Button>
+					<Button onClick={handleDownloadCsv} className="hover:cursor-pointer" size="sm" variant="secondary" disabled={!links.length || isPending}>Baixar CSV</Button>
 				</CardAction>
 			</CardHeader>
 			<CardContent className="divide-y">
